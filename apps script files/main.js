@@ -1,4 +1,5 @@
 const isOn = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('settings').getRange('B1').getValue()
+const emailList = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('settings').getRange('B6:B15').getValues().flat().filter(x => x !== '').join(",")
 
 function syncServices() {
 
@@ -9,7 +10,16 @@ function syncServices() {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
   const servicesData = ss.getSheetByName('servicesData')
 
-  getCurrentServicesData()
+  const token = secretManagerLibrary.ensureFreshToken(
+                    '1020400423324',
+                    'gc_sync_clientID',
+                    'gc_sync_clientsecret',
+                    'gc_sync_token'
+                    )
+
+  console.log(token)
+
+  getCurrentServicesData(token)
 
   // format data on the report
   servicesData.sort(7)
@@ -28,24 +38,24 @@ function syncServices() {
   let iepLinesGoogleFile = fileData.filter(x => x.folderName !== '504' && x.folderName !== 'EST')
 
   // remove IEP links in PS with no files in Google
-  removeServiceLinks(iepLinesGoogleFile, data, 'iep', 'LINK_IEP')
+  removeServiceLinks(iepLinesGoogleFile, data, 'iep', 'LINK_IEP', token)
 
   // remove 504 links in PS with no files in Google
-  removeServiceLinks(ss504LinesGoogleFile, data, 'ss504', 'LINK_504')
+  removeServiceLinks(ss504LinesGoogleFile, data, 'ss504', 'LINK_504', token)
 
   // remove EST links in PS with no files in Google
-  removeServiceLinks(estLinesGoogleFile, data, 'est', 'LINK_EST')
+  removeServiceLinks(estLinesGoogleFile, data, 'est', 'LINK_EST', token)
   
 
   
   // update IEP links
-  updateServiceLinks('iep', iepLinesGoogleFile, data, 'LINK_IEP')
+  updateServiceLinks('iep', iepLinesGoogleFile, data, 'LINK_IEP', token)
 
   // update 504 links
-  updateServiceLinks('ss504', ss504LinesGoogleFile, data, 'LINK_504')
+  updateServiceLinks('ss504', ss504LinesGoogleFile, data, 'LINK_504', token)
 
   // update EST links
-  updateServiceLinks('est', estLinesGoogleFile, data, 'LINK_EST')
+  updateServiceLinks('est', estLinesGoogleFile, data, 'LINK_EST', token)
 
 
   console.log('fin')
@@ -55,7 +65,7 @@ function syncServices() {
 // https://drive.google.com/file/d/1m_I7HvZl8t5RUH3Ykzzv0k6j9lFrnsm4/view
 
 
-function updateServiceLinks(service, serviceLinesGoogleFile, psData, linkField){
+function updateServiceLinks(service, serviceLinesGoogleFile, psData, linkField, token){
 
   // combine data from Google folders with services data pulled from PS
   serviceLinesGoogleFile.forEach(line =>{
@@ -80,14 +90,14 @@ function updateServiceLinks(service, serviceLinesGoogleFile, psData, linkField){
 
   // update IEP links in PS
   if (linkNeeded.length > 0){
-    updateMultipleStudentLinks(linkNeeded, 'links')
+    updateMultipleStudentLinks(linkNeeded, 'links', token)
   } else {
     console.log('no ' + service + ' links to update')
   }
 }
 
 
-function removeServiceLinks(googleData, servicesData, serviceType, linkField){
+function removeServiceLinks(googleData, servicesData, serviceType, linkField, token){
 
   // Create a Set of studentIds from googleData for quick lookup
   const googleStudentIds = new Set(googleData.map(item => item.studentId));
@@ -102,7 +112,7 @@ function removeServiceLinks(googleData, servicesData, serviceType, linkField){
   })
 
   if (linksToRemove.length > 0){
-    updateMultipleStudentLinks(linksToRemove)
+    updateMultipleStudentLinks(linksToRemove,'remove', token)
   } else {
     console.log('no ' + serviceType + ' links to remove')
   }
