@@ -11,5 +11,5 @@ The idea is, you add the IEP/504/EST into the appropriate folder, make sure the 
 
 <img width="372" height="270" alt="Screenshot 2025-10-29 at 10 04 36 AM" src="https://github.com/user-attachments/assets/1e7c08d1-d70c-4f48-8ee3-54be6e1b2644" />
 
-##Google Requirements
+## Google Requirements
 An example Google Sheets spreadsheet can be found here: [https://docs.google.com/spreadsheets/d/1TU4FJlAj0AovTc6UOs3uZoFelIBnKCgRCnuvrPdjIKg/edit?usp=sharing](https://docs.google.com/spreadsheets/d/10oCEQfmozzIxoZZK_xUG-23iO-0Pw7vm0hBpvI55EDE/edit?gid=0#gid=0) This spreadsheet offers a visual of the process as it happens.
