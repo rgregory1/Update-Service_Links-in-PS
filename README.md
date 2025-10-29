@@ -13,3 +13,20 @@ The idea is, you add the IEP/504/EST into the appropriate folder, make sure the 
 
 ## Google Requirements
 An example Google Sheets spreadsheet can be found here: [https://docs.google.com/spreadsheets/d/1TU4FJlAj0AovTc6UOs3uZoFelIBnKCgRCnuvrPdjIKg/edit?usp=sharing](https://docs.google.com/spreadsheets/d/10oCEQfmozzIxoZZK_xUG-23iO-0Pw7vm0hBpvI55EDE/edit?gid=0#gid=0) This spreadsheet offers a visual of the process as it happens.
+
+This project is meant to work in conjunction with https://github.com/rgregory1/sharing-IEP-with-Apps-Script/, so the second sheet, **files**, should just import from the **files** sheet in that project.  You could do another API call and get a fresh copy if you choose, but that isn't in the project's code, it's in the other project's code.
+
+## PowerSchool Requirements
+There are two plugins attached to this repository: 
+- that will allow the API to work, make some changes to the plugin to make it apply to your school. Anyone with experience in PowerQueries should be able to accomplish this.
+- another that adds the necessary custom fields to the project.  I added a custom page to the student section so you could manually manipulate these fields as well.
+
+<img width="781" height="603" alt="Screenshot 2025-10-29 at 12 01 04 PM" src="https://github.com/user-attachments/assets/760db5e5-30c7-461f-b481-c148b15e54f9" />
+
+
+
+
+
+
+
+
