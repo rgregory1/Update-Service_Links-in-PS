@@ -8,3 +8,6 @@ This project is a Google Apps Script program that
 4. Those documents are then added to custom alerts in PowerSchool for each student
 
 The idea is, you add the IEP/504/EST into the appropriate folder, make sure the student's PS student_number is the first part of the PDF name, and the script maintains the links in PowerSchool fields.  These custom fields are then added to custom alerts so those staff with access to the student can see alerts for IEP/504/EST and ONLY those staff with needed access should be able to see the actual document (this is handled by the project https://github.com/rgregory1/sharing-IEP-with-Apps-Script/)
+
+<img width="372" height="270" alt="Screenshot 2025-10-29 at 10 04 36 AM" src="https://github.com/user-attachments/assets/1e7c08d1-d70c-4f48-8ee3-54be6e1b2644" />
+
