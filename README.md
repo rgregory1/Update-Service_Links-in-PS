@@ -23,8 +23,14 @@ There are two plugins attached to this repository:
 
 <img width="781" height="603" alt="Screenshot 2025-10-29 at 12 01 04 PM" src="https://github.com/user-attachments/assets/760db5e5-30c7-461f-b481-c148b15e54f9" />
 
+## Automation
+I set the triggers to fire twice a day and it handles the sharing pretty seamlessly, this function must function after the Sharing IEP with Apps Script project so the files page is up to date.
 
+I send a report to the necessary people twice a week so they can correct any inconsistencies.
 
+<img width="983" height="372" alt="Screenshot 2025-10-29 at 12 20 35 PM" src="https://github.com/user-attachments/assets/b9b882fa-b7ab-4e1e-90ea-0093f82e37d6" />
+
+<img width="698" height="591" alt="Screenshot 2025-10-29 at 12 23 11 PM" src="https://github.com/user-attachments/assets/0909479e-7346-4954-a2e8-eee48e7260b9" />
 
 
 
