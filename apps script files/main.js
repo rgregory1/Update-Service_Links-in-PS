@@ -1,3 +1,14 @@
+function onOpen(e) {
+
+      const ui = SpreadsheetApp.getUi();
+      const menu = ui.createMenu('Custom Functions');
+
+      menu.addItem('Sync Services', 'syncServices');
+      menu.addItem('Sync Report', 'errorReport');
+
+      menu.addToUi();
+}
+
 const isOn = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('settings').getRange('B1').getValue()
 const emailList = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('settings').getRange('B6:B15').getValues().flat().filter(x => x !== '').join(",")
 
@@ -10,11 +21,10 @@ function syncServices() {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
   const servicesData = ss.getSheetByName('servicesData')
 
-  const token = secretManagerLibrary.ensureFreshToken(
+  const token = secretManagerLibraryV2.getNewToken(
                     '1020400423324',
                     'gc_sync_clientID',
                     'gc_sync_clientsecret',
-                    'gc_sync_token'
                     )
 
   console.log(token)
@@ -62,7 +72,6 @@ function syncServices() {
 
 }
 
-// https://drive.google.com/file/d/1m_I7HvZl8t5RUH3Ykzzv0k6j9lFrnsm4/view
 
 
 function updateServiceLinks(service, serviceLinesGoogleFile, psData, linkField, token){
@@ -75,24 +84,43 @@ function updateServiceLinks(service, serviceLinesGoogleFile, psData, linkField, 
       line.isService = thisServiceLine[service]
       line.service_link = thisServiceLine[service + '_link']
       line.stu_dcid = thisServiceLine.stu_dcid
+      line.case_manager = thisServiceLine.case_manager
     } 
     
   })
 
   // find all students that have IEP pdfs but no data in link_iep field
-  let linkNeededObjects = serviceLinesGoogleFile.filter(x => x.service_link == '')
+  let linkUpdateObjects = serviceLinesGoogleFile.filter(x => x.service_link !== `https://drive.google.com/file/d/${x.fileId}/view`)
 
-  let linkNeeded = []
+  let linkUpdate = []
   
-  linkNeededObjects.forEach(line => {
-    linkNeeded.push([line.stu_dcid,linkField,line.fileId])
+  linkUpdateObjects.forEach(line => {
+    linkUpdate.push([line.stu_dcid,linkField,line.fileId])
   })
 
   // update IEP links in PS
-  if (linkNeeded.length > 0){
-    updateMultipleStudentLinks(linkNeeded, 'links', token)
+  if (linkUpdate.length > 0){
+    updateMultipleStudentLinks(linkUpdate, 'links', token)
   } else {
     console.log('no ' + service + ' links to update')
+  }
+
+  // update case manager for IEPs
+  if (service = 'iep'){
+    let caseManagerUpdates = []
+
+    let caseManagerUpdateObjects = serviceLinesGoogleFile.filter(x => x.folderName !== x.case_manager)
+
+    if (caseManagerUpdateObjects.length > 0){
+      
+      caseManagerUpdateObjects.forEach(line => {
+        
+        caseManagerUpdates.push([line.stu_dcid, 'IEP_CASE_MANAGER', line.folderName])
+      })
+
+      updateMultipleStudentLinks(caseManagerUpdates, 'case_managers', token)
+    }
+
   }
 }
 
@@ -115,6 +143,24 @@ function removeServiceLinks(googleData, servicesData, serviceType, linkField, to
     updateMultipleStudentLinks(linksToRemove,'remove', token)
   } else {
     console.log('no ' + serviceType + ' links to remove')
+  }
+
+  if (serviceType === 'iep'){
+
+
+    const noCaseManagerNeeded = servicesData.filter(service => !googleStudentIds.has(service.studentId) && service.case_manager !== '')
+
+    // console.log(noCaseManagerNeeded)
+
+    if(noCaseManagerNeeded.length > 0){
+
+      let caseManagersToRemove = []
+      noCaseManagerNeeded.forEach(link => {
+        caseManagersToRemove.push([link.stu_dcid, 'IEP_CASE_MANAGER',''])
+      })
+
+      updateMultipleStudentLinks(caseManagersToRemove,'remove', token)
+    }
   }
 
 }
