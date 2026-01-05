@@ -106,7 +106,7 @@ function updateServiceLinks(service, serviceLinesGoogleFile, psData, linkField, 
   }
 
   // update case manager for IEPs
-  if (service = 'iep'){
+  if (service == 'iep'){
     let caseManagerUpdates = []
 
     let caseManagerUpdateObjects = serviceLinesGoogleFile.filter(x => x.folderName !== x.case_manager)
